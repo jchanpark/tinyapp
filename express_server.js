@@ -20,10 +20,6 @@ app.get("/", (req, res) => {
   res.send("Hello!")
 });
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
-});
-
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
@@ -51,9 +47,18 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[shortURL]);
 });
 
+app.post("/urls/:shortURL", (req, res) => {
+
+  res.redirect("/urls");
+
+});
+
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 })
 
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`);
+});
 
