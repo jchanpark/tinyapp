@@ -72,8 +72,12 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user: users[req.cookies.user_id] };
-  res.render("urls_show", templateVars);
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user_id: req.cookies.user_id, user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null, email: users[req.cookies.user_id] ? users[req.cookies.user_id].email : null };
+  if (req.cookies.user_id === urlDatabase[req.params.shortURL].userID) {
+    res.render("urls_show", templateVars);
+  } else {
+    res.send("error 403 - please login first.");
+  }
 })
 
 app.get("/u/:shortURL", (req, res) => {
@@ -82,14 +86,17 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
-  // console.log('urlDatabase', urlDatabase);
+  const longURL = req.body.longURL;
+  urlDatabase[req.params.shortURL] = { longURL: longURL, userID: req.cookies.user_id };
   res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
+  if (req.cookies.user_id === urlDatabase[req.params.shortURL].user_id) {
+    delete urlDatabase[req.params.shortURL];
+  } else {
+    res.send("error 403 - please login first");
+  }  
 })
 
 app.post("/login", (req, res) => {
