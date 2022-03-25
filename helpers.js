@@ -7,6 +7,16 @@ const findUserByEmail = function(email, users) {
   return;
 };
 
+const urlsForUser = function(id, urlDatabase) {
+  let urlsToDisplay = {};
+  for (let key in urlDatabase) {
+    if (urlDatabase[key].userID === id) {
+      urlsToDisplay[key] = urlDatabase[key];
+    }
+  }
+  return urlsToDisplay;
+}
 
 
-module.exports = { findUserByEmail };
+
+module.exports = { findUserByEmail, urlsForUser };
