@@ -3,6 +3,7 @@ const app = express();
 const PORT = 8080;
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcryptjs");
 const helpers = require("./helpers");
 const findUserByEmail = helpers.findUserByEmail;
 const urlsForUser = helpers.urlsForUser;
@@ -106,7 +107,9 @@ app.post("/login", (req, res) => {
   if (!user) {
     return res.send(`403 No user found with this email`);
   }
-  if (user.password !== password) {
+  const hashedPassword = user.password;
+
+  if (!bcrypt.compareSync(password, hashedPassword)) {
     return res.send(`403 Password does not match`);
   }
   res.cookie("user_id", user.id);
@@ -124,12 +127,11 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  // check if the email or password do not exit send 400 error, messaging "enter proper email and password"
-  // if the user exist send 400 error, messaging "the email already exist"
-  // console.log('users1', users);
+
   const userRandomId = generateRandomString();
   const email = req.body.email;
   const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
 
   if (!email || !password) {
     return res.send(`error 400 - please enter an email or password`);
@@ -139,8 +141,8 @@ app.post("/register", (req, res) => {
 
   users[userRandomId] = {
     id: userRandomId,
-    email,
-    password,
+    email: email,
+    password: hashedPassword
   }
   res.cookie("user_id", userRandomId);
   res.redirect("/urls");
