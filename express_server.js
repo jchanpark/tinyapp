@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
+const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const helpers = require("./helpers");
 const findUserByEmail = helpers.findUserByEmail;
 
 app.set("view engine", "ejs");
+app.use(morgan("dev"));
 app.use(cookieParser());
 
 const bodyParser = require("body-parser");
@@ -16,9 +18,20 @@ const generateRandomString = function() {
   return Math.random().toString(36).substring(2,8);
 };
 
+// const urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com"
+// };
+
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+        longURL: "https://www.tsn.ca",
+        userID: "aJ48lW"
+    },
+    i3BoGr: {
+        longURL: "https://www.google.ca",
+        userID: "aJ48lW"
+    }
 };
 
 const users = { 
@@ -50,21 +63,25 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL] = { longURL: req.body.longURL, userID: req.cookies.user_id };
+  console.log('urlDatabase',urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user: users[req.cookies.user_id] };
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user: users[req.cookies.user_id] };
   res.render("urls_show", templateVars);
 })
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  res.redirect(urlDatabase[shortURL]);
+  res.redirect(urlDatabase[shortURL].longURL);
 });
 
 app.post("/urls/:shortURL", (req, res) => {
+  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
+  console.log('urlDatabase', urlDatabase);
+
   res.redirect("/urls");
 });
 
@@ -125,9 +142,6 @@ app.get("/login", (req, res) => {
   const templateVars = { user: users[req.cookies.user_id]};
   res.render("login", templateVars);
 })
-
-
-
 
 
 app.listen(PORT, () => {
