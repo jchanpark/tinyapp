@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const helpers = require("./helpers");
 const findUserByEmail = helpers.findUserByEmail;
+const urlsForUser = helpers.urlsForUser;
 
 app.set("view engine", "ejs");
 app.use(morgan("dev"));
@@ -52,8 +53,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, user: users[req.cookies.user_id] };
+  // const user = users[req.cookies.user_id];
+  const templateVars = { urls: urlsForUser(req.cookies.user_id, urlDatabase), user: users[req.cookies.user_id], email: users[req.cookies.user_id] ? users[req.cookies.user_id].email : null };
   res.render("urls_index", templateVars);
+
 })
 
 app.get("/urls/new", (req, res) => {
@@ -64,7 +67,7 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = { longURL: req.body.longURL, userID: req.cookies.user_id };
-  console.log('urlDatabase',urlDatabase);
+  // console.log('urlDatabase',urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -80,8 +83,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.post("/urls/:shortURL", (req, res) => {
   urlDatabase[req.params.shortURL].longURL = req.body.longURL;
-  console.log('urlDatabase', urlDatabase);
-
+  // console.log('urlDatabase', urlDatabase);
   res.redirect("/urls");
 });
 
@@ -133,7 +135,6 @@ app.post("/register", (req, res) => {
     email,
     password,
   }
-  console.log('users2', users);
   res.cookie("user_id", userRandomId);
   res.redirect("/urls");
 })
