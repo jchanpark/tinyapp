@@ -5,7 +5,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>URL - TinyApp Example</title>
 </head>
-
 <body>
   <%- include('partials/_header') %>
   <div class="card text-center">
@@ -15,7 +14,6 @@
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
       </div>
     <div class="card-footer text-muted">
-
       <h3>Edit</h3>
       <form class="form-inline" action="/urls/<%= shortURL %>" method="POST" style="display: flex; justify-content: center;">
         <div class="form-group mb-2">
@@ -24,8 +22,6 @@
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </form>
-
-
     </div>
   </div>
   <!-- Bootstrap JS -->
