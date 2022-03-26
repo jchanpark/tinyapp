@@ -15,8 +15,10 @@ const urlsForUser = function(id, urlDatabase) {
     }
   }
   return urlsToDisplay;
-}
+};
 
+const generateRandomString = function() {
+  return Math.random().toString(36).substring(2,8);
+};
 
-
-module.exports = { findUserByEmail, urlsForUser };
+module.exports = { findUserByEmail, urlsForUser, generateRandomString };
