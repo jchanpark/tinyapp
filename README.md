@@ -5,8 +5,16 @@ TinyApp is a full stack web application built with Node and Express that allows 
 ## Final Product
 
 ### Register
-!["register-page"](https://raw.githubusercontent.com/jchanpark/tinyapp/6be8d828e7c350ef1ee6e5b4615804695f554277/docs/urls-page.png)
-!["register-page"](https://raw.githubusercontent.com/jchanpark/tinyapp/6be8d828e7c350ef1ee6e5b4615804695f554277/docs/register-page.png)
+!["register-page"](https://github.com/jchanpark/tinyapp/blob/main/docs/register.png?raw=true)
+
+### Login
+!["login-page"](https://github.com/jchanpark/tinyapp/blob/main/docs/login.png?raw=true)
+
+### My URLs
+!["my-urls-page"](https://github.com/jchanpark/tinyapp/blob/main/docs/my_urls.png?raw=true)
+
+### Edit
+!["edit-page"](https://github.com/jchanpark/tinyapp/blob/main/docs/edit.png?raw=true)
 
 ## Dependencies
 
